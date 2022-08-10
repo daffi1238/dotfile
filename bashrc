@@ -27,3 +27,7 @@ auto() {
         setxkbmap -layout 'es,es' && xrandr --size 1920x1200
 }
 
+wakeonlan() {
+	MAC=18:c0:4d:98:00:9fç
+	echo -e $(echo $(printf 'f%.0s' {1..12}; printf "$(echo $MAC | sed 's/://g')%.0s" {1..16}) | sed -e 's/../\\x&/g') | nc -w1 -u -b 255.255.255.255 4000
+}
