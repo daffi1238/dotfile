@@ -12,6 +12,11 @@ function extractPorts(){
     echo -e "[*] Ports copied to clipboard\n"  >> extractPorts.tmp
     cat extractPorts.tmp; rm extractPorts.tmp
 }
+
+function extractPorts_own(){
+	cat $1 | grep -oP "\d{1,5}/open" | tr -d "/open" | tr "\n" ","
+}
+
 #Para eliminar ficheros de forma no recuperable
 function rmk(){
     scrub -p dod $1
