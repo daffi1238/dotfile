@@ -48,3 +48,5 @@ function makeBackUp() {
         date=$(date +"%Y-%m-%d-%h")
         zip -r /ruta/$date-File.zip /ruta/$date-File.zip
 }
+
+alias smbServer='sudo impacket-smbserver smbFolder $(pwd) -smb2support'
