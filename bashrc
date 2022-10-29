@@ -34,8 +34,7 @@ auto() {
 
 
 myip() {
-        myip=$(curl https://www.myip.com/ | grep -oP '\d{1,3}\.\d{1,3}\.\d{1,3}\.\d{1,3}' | xargs | awk '{print $1}')
-        echo $myip | grep -oP '\d{1,3}\.\d{1,3}\.\d{1,3}\.\d{1,3}'
+	curl ifconfig.me
 }
 
 
@@ -50,3 +49,11 @@ function makeBackUp() {
 }
 
 alias smbServer='sudo impacket-smbserver smbFolder $(pwd) -smb2support'
+
+
+function globalv(){
+	cp ~/.zshrc ~/zshrc_bck
+	echo "sed -i 's/^$1=.*//g' ~/.zshrc" | bash
+	echo $1=$2 >> ~/.zshrc
+	source ~/.zshrc
+}
