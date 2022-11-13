@@ -14,7 +14,7 @@ function extractPorts(){
 }
 
 function extractPorts_own(){
-	cat $1 | grep -oP "\d{1,5}/open" | tr -d "/open" | tr "\n" "," | xclip -sel clip
+	cat $1 | grep -oP "\d{1,5}/open" | tr -d "/open" | tr "\n" ","
 }
 
 #Para eliminar ficheros de forma no recuperable
@@ -59,7 +59,5 @@ function globalv(){
 }
 
 function nmap_htb(){
-	sudo nmap -sS --min-rate 5000 -p- -Pn -n $1 -oG ./nmap/allPorts_$1
-	ports=$(cat allPorts_$1 | grep -oP "\d{1,5}/open" | tr -d "/open" | tr "\n" ",")
-	nmap -sCV -p$(echo $ports) -Pn -n  $1 -oN ./nmap/targeted_$1
+
 }
