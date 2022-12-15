@@ -48,10 +48,10 @@ function makeBackUp() {
         zip -r /ruta/$date-File.zip /ruta/$date-File.zip
 }
 
-#Hace un backup de un fichero en el mismo directorio pasando tan sólo un parámetro
+#Hace un backup de un fichero en el mismo directorio como primer parámetro la ruta y como segundo el nombre del fichero
 function makeBackUp() {
         date=$(date +"%Y-%m-%d-%h")
-        zip -r $(echo $date)_$(echo $1).zip $1
+        zip -r $1/$(echo $date)_$(echo $2).zip $2
 }
 
 
