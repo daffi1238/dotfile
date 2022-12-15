@@ -48,6 +48,13 @@ function makeBackUp() {
         zip -r /ruta/$date-File.zip /ruta/$date-File.zip
 }
 
+#Hace un backup de un fichero en el mismo directorio pasando tan sólo un parámetro
+function makeBackUp() {
+        date=$(date +"%Y-%m-%d-%h")
+        zip -r $(echo $date)_$(echo $1).zip $1
+}
+
+
 alias smbServer='sudo impacket-smbserver smbFolder $(pwd) -smb2support'
 
 
