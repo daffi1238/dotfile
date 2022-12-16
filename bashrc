@@ -77,7 +77,7 @@ function nmap_htb(){
 
 #Just pass as paremeter a file with the different domains you need and this add http and https at the begin
 function addhttp(){
-    rm $(echo $1)_http
+    rm -f $(echo $1)_http
     while read -r line;
     do
     echo $line | sed 's/^/http:\/\//g' >> $(echo $1)_http
