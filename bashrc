@@ -65,8 +65,25 @@ function globalv(){
 	source ~/.zshrc
 }
 
+
+#########################
+#Offensive functions
+
 function nmap_htb(){
 	sudo nmap -sS --min-rate 5000 -p- -Pn -n $1 -oG ./nmap/allPorts_$1
 	ports=$(cat allPorts_$1 | grep -oP "\d{1,5}/open" | tr -d "/open" | tr "\n" ",")
 	nmap -sCV -p$(echo $ports) -Pn -n  $1 -oN ./nmap/targeted_$1
 }
+
+#Just pass as paremeter a file with the different domains you need and this add http and https at the begin
+function addhttp(){
+    rm $(echo $1)_http
+    while read -r line;
+    do
+    echo $line | sed 's/^/http:\/\//g' >> $(echo $1)_http
+    echo $line | sed 's/^/https:\/\//g' >> $(echo $1)_http
+    done < $1
+}
+
+
+
