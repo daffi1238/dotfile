@@ -98,6 +98,54 @@ function mkt() {
 }
 
 
+#crackmapexec
+function crackmapexec_map() {
+    #TODO
+    # Revisar si se pueden pasar ficheros como parámetros
+
+    # En caso de no tener 3 parámetros en la llamada:
+    if [ $# -ne 3 ]; then
+        echo "Uso: crackmapexec_map <ipv> <usuario> <contraseña>"
+        echo "Ejemplo: crackmapexec_map 10.10.10.77 tom '1ts-mag1c!!!'"
+        return 1
+    fi
+    # Comando para crackmapexec y las credenciales
+    crackmapexec_cmd="crackmapexec"
+    ipv=$1
+    username=$2
+    password=$3
+    password=$(echo $password | sed 's/!/\\!/g')
+
+    # Iniciar una nueva sesión de tmux llamada "crackmapexec"
+    tmux new-session -d -s crackmapexec
+
+    # Dividir la ventana en 7 paneles
+    tmux split-window -t crackmapexec:0 -h
+    tmux split-window -t crackmapexec:0 -h
+    tmux split-window -t crackmapexec:0 -h
+    tmux split-window -t crackmapexec:0 -h
+    tmux split-window -t crackmapexec:0 -h
+    tmux split-window -t crackmapexec:0 -h
+
+    # Ejecutar el comando crackmapexec en cada panel para cada servicio
+    tmux send-keys -t crackmapexec:0.0 "$crackmapexec_cmd ftp $ipv -u \"$username\" -p \"$password\"" Enter
+    tmux send-keys -t crackmapexec:0.1 "$crackmapexec_cmd ssh $ipv -u \"$username\" -p \"$password\"" Enter
+    tmux send-keys -t crackmapexec:0.2 "$crackmapexec_cmd rdp $ipv -u \"$username\" -p \"$password\"" Enter
+    tmux send-keys -t crackmapexec:0.3 "$crackmapexec_cmd smb $ipv -u \"$username\" -p \"$password\"" Enter
+    tmux send-keys -t crackmapexec:0.4 "$crackmapexec_cmd ldap $ipv -u \"$username\" -p \"$password\"" Enter
+    tmux send-keys -t crackmapexec:0.5 "$crackmapexec_cmd winrm $ipv -u \"$username\" -p \"$password\"" Enter
+    tmux send-keys -t crackmapexec:0.6 "$crackmapexec_cmd mssql $ipv -u \"$username\" -p \"$password\"" Enter
+
+    # Seleccionar el primer panel
+    tmux select-pane -t crackmapexec:0.0
+
+    # Unir todos los paneles
+    tmux select-layout -t crackmapexec:0 tiled
+
+    # Attach a la sesión de tmux
+    tmux attach-session -t crackmapexec
+}
+
 #Infrastructure
 #Just pass as paremeter a file with the different domains you need and this add http and https at the begin
 function addhttp(){
