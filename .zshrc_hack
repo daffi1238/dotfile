@@ -1,0 +1,110 @@
+PATH=$PATH:/home/kali/.local/bin
+
+
+auto() {
+        echo "changing keyboard and display configuration"
+        setxkbmap -layout 'es,es' && xrandr --size 1920x1200
+}
+
+burp() {
+#        LD_PRELOAD=/home/kali/burp/fake-user.so java -jar ls -t /home/kali/burp/burpsuite_pro_v2022.8.3.jar | head -1
+        LD_PRELOAD=/home/kali/burp/fake-user.so java -jar `ls -t /home/kali/burp/burpsuite_pro_*.jar | head -1`
+}
+
+
+alias gohtb="cd ~/htb/"
+alias govpn="cd ~/vpn/"
+
+
+function globalv(){
+        cp ~/.zshrc ~/zshrc_bck
+        echo "sed -i 's/^$1=.*//g' ~/.zshrc" | bash
+        echo $1=$2 >> ~/.zshrc
+        source ~/.zshrc
+}
+
+myip() {
+        curl ifconfig.me
+}
+
+
+wakeonlan() {
+        MAC=18:c0:4d:98:00:9fç
+        echo -e $(echo $(printf 'f%.0s' {1..12}; printf "$(echo $MAC | sed 's/://g')%.0s" {1..16}) | sed -e 's/../\\x&/g') | nc -w1 -u -b 255.255.255.255 4000
+}
+
+
+#Hace un backup de un fichero en el mismo directorio como primer parámetro la ruta y como segundo el nombre del fichero
+function makeBackUp() {
+        date=$(date +"%Y-%m-%d-%h")
+        zip -r $1/$(echo $date)_$(echo $2).zip $2
+}
+
+
+#Para eliminar ficheros de forma no recuperable
+function rmk(){
+    scrub -p dod $1
+    shred -zun 10 -v $1
+}
+
+
+
+# Hacking shortcuts
+alias smbServer='sudo impacket-smbserver smbFolder $(pwd) -smb2support'
+
+
+function smb_null_session() {
+        echo "[*] crackmapexec:"
+        echo "crackmapexec smb $ipv"
+        echo '[*] smbmap:'
+        echo 'smbmap -u "" -p "" -P 445 -H $ipv'
+        echo 'smbmap -u "guest" -p "" -P 445 -H $ipv'
+        echo 'smbmap -H $ipv -u 0xdf'
+        echo
+        echo '[*] smbclient:'
+        echo 'smbclient -N -L \\$ipv'
+        echo 'smbclient -L $ipv -U "$user%$pass"'
+        echo 'smbclient //$ipv/SYSVOL -U "$user%$pass"'
+        echo '  smb: \> recurse ON'
+        echo '  smb: \> prompt OFF'
+        echo '  smb: \> mget *'
+        echo
+        echo "[*] Revisar metadatos de los ficheros!"
+        echo "exiftool"
+        echo
+        echo '[*] rpcclient:'
+        echo 'rpcclient -U "" $ipv -N'
+        echo 'rpcclient $> enomdomusers'
+        echo 'rpcclient $> enomdomgroups'
+        echo 'rpcclient $> queryuser 0x1f4'
+        echo 'rpcclient $> querydispinfo'
+}
+
+function ftp_anon() {
+        echo "[*] Checker:"
+        echo "nmap -sT -Pn -p21 --script='ftp-anon' $ipv" 
+        echo
+        echo "[*] Descargar el contenido en local"
+        echo "wget -r ftp://anonymous:anonymous@$ipv"
+        echo "ftp> prompt"
+        echo "ftp> mget *"
+        echo
+        echo "[*] Revisar metadatos de los ficheros!"
+        echo "exiftool"
+}
+
+function mkt() {
+        mkdir {nmap,content,exploits,scripts,tmp,privesc}
+}
+
+
+#Infrastructure
+#Just pass as paremeter a file with the different domains you need and this add http and https at the begin
+function addhttp(){
+    rm -f $(echo $1)_http
+    while read -r line;
+    do
+    echo $line | sed 's/^/http:\/\//g' >> $(echo $1)_http
+    echo $line | sed 's/^/https:\/\//g' >> $(echo $1)_http
+    done < $1
+}
