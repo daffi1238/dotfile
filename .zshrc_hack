@@ -1,5 +1,6 @@
 PATH=$PATH:/home/kali/.local/bin
 
+alias my_ffuf="~/.local/bin/my_ffuf.sh"
 
 auto() {
         echo "changing keyboard and display configuration"
@@ -94,7 +95,7 @@ function ftp_anon() {
 }
 
 function mkt() {
-        mkdir {nmap,content,exploits,scripts,tmp,privesc}
+        mkdir {nmap,content,exploits,scripts,fuzz,tmp,privesc}
 }
 
 
@@ -146,6 +147,7 @@ function crackmapexec_map() {
     tmux attach-session -t crackmapexec
 }
 
+#################################################################################################3
 #Infrastructure
 #Just pass as paremeter a file with the different domains you need and this add http and https at the begin
 function addhttp(){
@@ -156,3 +158,25 @@ function addhttp(){
     echo $line | sed 's/^/https:\/\//g' >> $(echo $1)_http
     done < $1
 }
+
+
+#nmap scans
+## falta añadir UDP!!!
+function nmap_scans(){
+    # Comprobamos que se reciben exactamente dos parámetros
+    if [ "$#" -ne 2 ]; then
+        echo "Debes proporcionar exactamente dos parámetros."
+        echo "Uso: $0 [dirección_IP] [min_rate]"
+    else
+        IP_ADDRESS=$1
+        MIN_RATE=$2
+        nmap -sT -Pn -p- --min-rate=$MIN_RATE -n -oN allPorts -vvv $IP_ADDRESS
+   
+        NAME=$(echo $ipv | sed 's/\//_/g')
+        PORTS=$(cat allPorts | grep -oP '\d{1,5}/tcp' | sed 's/\/tcp//g' | xargs | tr " " ",")
+        nmap -sT -sCV -Pn -p$PORTS --min-rate=$MIN_RATE -n -oN $NAME $IP_ADDRESS
+
+
+     fi
+}
+

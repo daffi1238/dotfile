@@ -11,3 +11,15 @@ source ~/.zshrc
 popd
 ```
 
+# Update
+```bash
+pushd
+cd /tmp
+git clone git@github.com:daffi1238/dotfile.git
+cd dotfile
+./update_repo.sh
+git add
+git commit -m "auto-update"
+git push
+popd
+```
