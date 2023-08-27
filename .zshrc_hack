@@ -1,7 +1,5 @@
 PATH=$PATH:/home/kali/.local/bin
 
-alias my_ffuf="~/.local/bin/my_ffuf.sh"
-
 auto() {
         echo "changing keyboard and display configuration"
         setxkbmap -layout 'es,es' && xrandr --size 1920x1200
@@ -180,3 +178,9 @@ function nmap_scans(){
      fi
 }
 
+# FUZZ
+alias my_ffuf="~/.local/bin/my_ffuf.sh"
+
+function ffuf_extract(){
+    cat $1 | jq | grep '"FUZZ":' | awk '{print $2}' FS=":" | tr -d '"'
+}
