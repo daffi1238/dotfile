@@ -3,26 +3,29 @@
 # Mostrar ayuda si no se proporcionan argumentos
 if [ "$#" -eq 0 ]; then
     echo "Uso: $0 -u <url> -w <wordlist> -t <threads> -x <proxy> -of <output_format> -o <output_file> -fw <filter_wordcount>"
+    echo
+    echo "[*]Wordlists recomendadas:"
+    echo "/usr/share/seclists/Discovery/Web-Content/directory-list-2.3-medium.txt"
+    echo "/usr/share/seclists/Discovery/Web-Content/common.txt"
+
     exit 1
 fi
 
 # Leer argumentos
 while [[ "$#" -gt 0 ]]; do
     case $1 in
-        -u) url="$2"; shift ;;
-        -w) wordlist="$2"; shift ;;
-        -t) threads="$2"; shift ;;
-        -x) proxy="$2"; shift ;;
-        -of) output_format="$2"; shift ;;
-        -o) output_file="$2"; shift ;;
-        -fw) filter_wordcount="$2"; shift ;;
+        -u) url="$2"; shift 2 ;;
+        -w) wordlist="$2"; shift 2 ;;
+        -t) threads="$2"; shift 2 ;;
+        -x) proxy="$2"; shift 2 ;;
+        -of) output_format="$2"; shift 2 ;;
+        -o) output_file="$2"; shift 2 ;;
+        -fw) filter_wordcount="$2"; shift 2 ;;
         *) echo "Argumento desconocido: $1"; exit 1 ;;
     esac
-    shift
 done
 
-# Verificar si las variables obligatorias están establecidas
-if [[ -z "$url"  -z "$wordlist"  -z "$threads" || -z "$proxy" ]]; then
+if [[ -z "$url" ]] || [[ -z "$wordlist" ]] || [[ -z "$threads" ]]; then
     echo "Faltan argumentos."
     exit 1
 fi
