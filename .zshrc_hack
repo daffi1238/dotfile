@@ -185,3 +185,6 @@ function ffuf_extract(){
     cat $1 | jq | grep -P '"FUZZ":|"status":' | awk '{print $2}' FS=":" | sed 's/^[ \t]*//' |  tr -d '",\{' | awk 'NR%2!=0{printf "%s -> ",$0;next;}1'
 
 }
+
+# Loops
+alias template_loop="cat /home/kali/.local/bin/template_loop.sh"
