@@ -61,7 +61,7 @@ function smb_enum() {
         echo 'smbmap -H $ipv -u 0xdf'
         echo
         echo '[*] smbclient:'
-        echo 'smbclient -N -L \\$ipv'
+        echo 'smbclient -N -L //$ipv'
         echo 'smbclient -L $ipv -U "$user%$pass"'
         echo 'smbclient //$ipv/SYSVOL -U "$user%$pass"'
         echo '  smb: \> recurse ON'
@@ -77,6 +77,29 @@ function smb_enum() {
         echo 'rpcclient $> enomdomgroups'
         echo 'rpcclient $> queryuser 0x1f4'
         echo 'rpcclient $> querydispinfo'
+}
+
+function smb_server() {
+	echo "[*] smbserver.py -smb2support smbFolder $(pwd)"
+}
+
+function smb_check_writeable() {
+	echo "[*] Remember mount the folder with"
+	echo "mount -t cifs -o rw,username=guest,password= '//10.10.10.103/Department Shares' /mnt"
+	echo "[*] Hazte root para poder escribir en /mnt así como recuerda aplicar bash"
+	echo "[*] sudo su"
+	echo "[*] bash"
+	echo
+	echo "Comenzando..."
+	list=$(find /mnt -type d)
+	for d in $list
+		do
+		touch $d/x 2>/dev/null
+		if [ $? -eq 0 ]
+		then
+		echo $d " is writable"
+		fi
+	done
 }
 
 function ftp_enum() {
