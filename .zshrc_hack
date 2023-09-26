@@ -52,7 +52,7 @@ function rmk(){
 alias smbServer='sudo impacket-smbserver smbFolder $(pwd) -smb2support'
 
 
-function smb_null_session() {
+function smb_enum() {
         echo "[*] crackmapexec:"
         echo "crackmapexec smb $ipv"
         echo '[*] smbmap:'
@@ -79,7 +79,7 @@ function smb_null_session() {
         echo 'rpcclient $> querydispinfo'
 }
 
-function ftp_anon() {
+function ftp_enum() {
         echo "[*] Checker:"
         echo "nmap -sT -Pn -p21 --script='ftp-anon' $ipv" 
         echo
@@ -170,11 +170,17 @@ function nmap_scans(){
         MIN_RATE=$2
         nmap -sT -Pn -p- --min-rate=$MIN_RATE -n -oN allPorts -vvv $IP_ADDRESS
    
+	#Escaneo para TCP
         NAME=$(echo $ipv | sed 's/\//_/g')
         PORTS=$(cat allPorts | grep -oP '\d{1,5}/tcp' | sed 's/\/tcp//g' | xargs | tr " " ",")
-        nmap -sT -sCV -Pn -p$PORTS --min-rate=$MIN_RATE -n -oN $NAME $IP_ADDRESS
+        sudo nmap -sVC -sS -Pn -p$PORTS --min-rate=$MIN_RATE -n -oN $NAME $IP_ADDRESS && echo "Escaneo TCP finalizado!" &
+	
+	#Escaneo para UDP
+	NAME_UDP=${NAME}_UDP
+	sudo nmap -sU --top-ports 1000 -Pn --min-rate=$MIN_RATE -n -oN $NAME_UDP $IP_ADDRESS &
 
-
+	# Esperamos a que ambos procesos en segundo plano finalicen
+        wait
      fi
 }
 
@@ -188,3 +194,24 @@ function ffuf_extract(){
 
 # Loops
 alias template_loop="cat /home/kali/.local/bin/template_loop.sh"
+
+
+# SMTP
+function smpt_enum(){
+	echo "nmap -p25 --script smtp-commands $ipv -Pn"
+	echo "nmap -p25 --script smtp-open-relay $ipv -v -Pn"
+	echo "[*] Recuerda modificar el wordlist para añadirle a cada usuario @dominio"
+	echo "[*] cp /usr/share/seclists/Usernames/cirt-default-usernames.txt test-users.txt && sed -i 's/$/@domain.com/' test-users.txt"
+	echo
+	echo "smtp-user-enum -M RCPT -U test-users.txt -t 10.10.10.77"
+	echo
+	echo "[*] Phising Over Open Relay"
+	echo '[*] sendEmail -f 0xdf@megabank.com -t nico@megabank.com -u "Invoice Attached" -m "You are overdue payment" -a invoice.rtf -s 10.10.10.77 -v'
+	echo "	-f - from address, can be anything as long as the domain exists
+		-t - to address, `nico@megabank.com`
+		-u - subject
+		-m - body
+		-a - attachment
+		-s - smtp server
+		-v - verbose"
+}
