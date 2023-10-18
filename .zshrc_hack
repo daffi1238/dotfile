@@ -86,6 +86,7 @@ function smb_server() {
 function smb_check_writeable() {
 	echo "[*] Remember mount the folder with"
 	echo "mount -t cifs -o rw,username=guest,password= '//10.10.10.103/Department Shares' /mnt"
+	echo
 	echo "[*] Hazte root para poder escribir en /mnt así como recuerda aplicar bash"
 	echo "[*] sudo su"
 	echo "[*] bash"
@@ -94,6 +95,7 @@ function smb_check_writeable() {
 	list=$(find /mnt -type d)
 	for d in $list
 		do
+		echo "[*] Annalyzing directory $d"
 		touch $d/x 2>/dev/null
 		if [ $? -eq 0 ]
 		then
