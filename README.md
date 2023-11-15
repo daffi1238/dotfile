@@ -8,6 +8,7 @@ cd dotfile
 cp .zshrc_hack ~
 echo "source ~/.zshrc_hack" >> ~/.zshrc
 source ~/.zshrc
+cp .tmux.conf.local ~/
 popd
 ```
 

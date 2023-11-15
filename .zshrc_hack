@@ -13,7 +13,8 @@ burp() {
 
 alias gohtb="cd ~/htb/"
 alias govpn="cd ~/vpn/"
-
+alias grip="grep -P '\d{1,3}\.\d{1,3}\.\d{1,3}\.\d{1,3}'"
+alias gripo="grep -oP '\d{1,3}\.\d{1,3}\.\d{1,3}\.\d{1,3}'"
 
 function globalv(){
         cp ~/.zshrc ~/zshrc_bck
@@ -185,29 +186,13 @@ function addhttp(){
 
 #nmap scans
 ## falta añadir UDP!!!
-function nmap_scans(){
-    # Comprobamos que se reciben exactamente dos parámetros
-    if [ "$#" -ne 2 ]; then
-        echo "Debes proporcionar exactamente dos parámetros."
-        echo "Uso: $0 [dirección_IP] [min_rate]"
-    else
-        IP_ADDRESS=$1
-        MIN_RATE=$2
-        nmap -sT -Pn -p- --min-rate=$MIN_RATE -n -oN allPorts -vvv $IP_ADDRESS
-   
-	#Escaneo para TCP
-        NAME=$(echo $ipv | sed 's/\//_/g')
-        PORTS=$(cat allPorts | grep -oP '\d{1,5}/tcp' | sed 's/\/tcp//g' | xargs | tr " " ",")
-        sudo nmap -sVC -sS -Pn -p$PORTS --min-rate=$MIN_RATE -n -oN $NAME $IP_ADDRESS && echo "Escaneo TCP finalizado!" &
-	
-	#Escaneo para UDP
-	NAME_UDP=${NAME}_UDP
-	sudo nmap -sU --top-ports 1000 -Pn --min-rate=$MIN_RATE -n -oN $NAME_UDP $IP_ADDRESS &
-
-	# Esperamos a que ambos procesos en segundo plano finalicen
-        wait
-     fi
+function scan_nmap(){
+        sudo nmap -sS --min-rate 2000 -p- -Pn -n $1 -oN allPorts_$1 -vv
+        ports=$(cat allPorts_$1 | grep -oP "\d{1,5}/tcp" | tr -d "/tcp" | tr "\n" ",")
+        nmap -sCV -p$(echo $ports) -Pn -n  $1 -oN target_$1
 }
+alias gP='grep -oP "\d{1,5}/tcp" | tr -d "/tcp" | tr "\n" "," | xclip -sel c'
+
 
 # FUZZ
 alias my_ffuf="~/.local/bin/my_ffuf.sh"
