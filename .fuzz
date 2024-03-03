@@ -1,0 +1,15 @@
+dirsearch -u https://$ipv/ -e aspx,txt
+
+feroxbuster -u http://cozyhosting.htb -B -n
+feroxbuster -u http://cozyhosting.htb -x php -B -n
+
+my_ffuf.sh -u http://cozyhosting.htb/FUZZ -w /usr/share/seclists/Discovery/Web-Content/directory-list-2.3-medium.txt -t 15 -of json
+
+## Subdominios
+ffuf -u http://seventeen.htb -w /usr/share/seclists/Discovery/DNS/subdomains-top1million-20000.txt -H 'Host: FUZZ.seventeen.htb' --mc all
+
+gobuster vhost -u seventeen.htb -w /usr/share/seclists/Discovery/DNS/subdomains-top1million-20000.txt -t 100
+
+-> Wordlist para subdominios
+/usr/share/seclists/Discovery/DNS/subdomains-top1million-20000.txt
+/usr/share/seclists/Discovery/DNS/bitquark-subdomains-top100000.txt

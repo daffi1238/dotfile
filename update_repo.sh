@@ -2,6 +2,7 @@
 echo "[*] Actualizando el fichero .zshrc..."
 cp ~/.zshrc_hack ./
 cp ~/.tmux.conf.local ./
+cp ~/.fuzz ./
 # Comprobamos el código de salida del último comando ejecutado
 if [ $? -eq 0 ]; then
    echo

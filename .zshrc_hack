@@ -15,6 +15,28 @@ alias gohtb="cd ~/htb/"
 alias govpn="cd ~/vpn/"
 alias grip="grep -P '\d{1,3}\.\d{1,3}\.\d{1,3}\.\d{1,3}'"
 alias gripo="grep -oP '\d{1,3}\.\d{1,3}\.\d{1,3}\.\d{1,3}'"
+alias fuzz="cat ~/.fuzz"
+
+function auto_fuzz(){
+    echo "my_ffuf.sh -u $1/FUZZ -w /usr/share/seclists/Discovery/Web-Content/common.txt -t 15 -of json"
+    #my_ffuf.sh -u $1/FUZZ -w /usr/share/seclists/Discovery/Web-Content/common.txt -t 15 -of json
+    echo "dirsearch -u $1"
+    #dirsearch -u $1
+    echo "feroxbuster -u $1 -B -n"
+    #feroxbuster -u $1 -B -n
+    
+    echo "my_ffuf.sh -u $1/FUZZ -w /usr/share/seclists/Discovery/Web-Content/directory-list-2.3-medium.txt -t 15 -of json"
+    #my_ffuf.sh -u $1/FUZZ -w /usr/share/seclists/Discovery/Web-Content/directory-list-2.3-medium.txt -t 15 -of json
+    echo
+    echo "#################################"
+    echo
+    domain=$(echo $1 | sed 's/https\?:\/\///g')
+    echo "ffuf -u $1 -w /usr/share/seclists/Discovery/DNS/subdomains-top1million-20000.txt -H 'Host: FUZZ.$domain' --mc all"
+    echo
+    echo "Extensiones recomendadas:"
+    echo ".pdf,.html,.php,.asp,.aspx"
+}
+
 
 function globalv(){
         cp ~/.zshrc ~/zshrc_bck
@@ -53,9 +75,12 @@ function rmk(){
 alias smbServer='sudo impacket-smbserver smbFolder $(pwd) -smb2support'
 
 
-function smb_enum() {
+function enum_smb() {
         echo "[*] crackmapexec:"
         echo "crackmapexec smb $ipv"
+        echo "crackmapexec smb $ipv -u gunther -p password123!"
+        echo "crackmapexec smb 10.10.10.1 -u users.txt -p password123"
+        echo
         echo '[*] smbmap:'
         echo 'smbmap -u "" -p "" -P 445 -H $ipv'
         echo 'smbmap -u "guest" -p "" -P 445 -H $ipv'
@@ -78,6 +103,8 @@ function smb_enum() {
         echo 'rpcclient $> enomdomgroups'
         echo 'rpcclient $> queryuser 0x1f4'
         echo 'rpcclient $> querydispinfo'
+	echo
+	echo 'enum4linux $ipv'
 }
 
 function smb_server() {
@@ -130,7 +157,7 @@ function crackmapexec_map() {
 
     # En caso de no tener 3 parámetros en la llamada:
     if [ $# -ne 3 ]; then
-        echo "Uso: crackmapexec_map <ipv> <usuario> <contraseña>"
+        echo "Uso: crackmapexec_map \<ipv\> \<usuario\> \<contraseña\>"
         echo "Ejemplo: crackmapexec_map 10.10.10.77 tom '1ts-mag1c!!!'"
         return 1
     fi
@@ -190,6 +217,8 @@ function scan_nmap(){
         sudo nmap -sS --min-rate 2000 -p- -Pn -n $1 -oN allPorts_$1 -vv
         ports=$(cat allPorts_$1 | grep -oP "\d{1,5}/tcp" | tr -d "/tcp" | tr "\n" ",")
         nmap -sCV -p$(echo $ports) -Pn -n  $1 -oN target_$1
+	sudo nmap -sU --top-port=20 $1 --open -oN UDP_target_$1
+	cat *_$1
 }
 alias gP='grep -oP "\d{1,5}/tcp" | tr -d "/tcp" | tr "\n" "," | xclip -sel c'
 
@@ -217,6 +246,7 @@ function smpt_enum(){
 	echo
 	echo "[*] Phising Over Open Relay"
 	echo '[*] sendEmail -f 0xdf@megabank.com -t nico@megabank.com -u "Invoice Attached" -m "You are overdue payment" -a invoice.rtf -s 10.10.10.77 -v'
+	echo '[*] sendEmail -f 0xdf@megabank.com -t nico@megabank.com -u "Invoice Attached" -m "You are overdue payment" -a invoice.rtf -s 10.10.10.77 -v'
 	echo "	-f - from address, can be anything as long as the domain exists
 		-t - to address, `nico@megabank.com`
 		-u - subject
@@ -225,3 +255,5 @@ function smpt_enum(){
 		-s - smtp server
 		-v - verbose"
 }
+
+alias tty="echo 'script /dev/null -c bash \nCtrl + z \nstty raw -echo; fg'"
