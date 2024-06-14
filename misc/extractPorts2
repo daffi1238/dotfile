@@ -1,6 +1,0 @@
-echo -e "Los comandos ejecutados para TCP y UDP respectivamente:"
-echo -e "sudo nmap -p- -sS --min-rate 5000 -vvv -n $1 | grep /tcp | grep -v "Discovered" | awk '{print $1}' | cut -d '/' -f 1 > portsTCP.txt"
-echo -e "sudo nmap -p- -sU --min-rate 5000 -vvv -n $1 | grep /udp | grep -v "Discovered" | awk '{print $1}' | cut -d '/' -f 1 > portsUDP.txt"
-
-sudo nmap -p- -sS --min-rate 5000 -vvv -n $1 | grep /tcp | grep -v "Discovered" | awk '{print $1}' | cut -d '/' -f 1 > portsTCP.txt
-sudo nmap -p- -sU --min-rate 5000 -vvv -n $1 | grep /udp | grep -v "Discovered" | awk '{print $1}' | cut -d '/' -f 1 > portsUDP.txt

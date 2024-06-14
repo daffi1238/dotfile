@@ -1,2 +1,0 @@
-sudo docker stop $(docker ps -a -q)
-sudo docker run -p 8080:8080 -p 9090:9090 -e TZ=Europe/Amsterdam webgoat/goatandwolf

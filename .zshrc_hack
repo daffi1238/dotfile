@@ -18,25 +18,39 @@ alias gripo="grep -oP '\d{1,3}\.\d{1,3}\.\d{1,3}\.\d{1,3}'"
 alias fuzz="cat ~/.fuzz"
 
 function auto_fuzz(){
-    echo "my_ffuf.sh -u $1/FUZZ -w /usr/share/seclists/Discovery/Web-Content/common.txt -t 15 -of json"
+    echo "- [ ] my_ffuf.sh -u $1/FUZZ -w /usr/share/seclists/Discovery/Web-Content/common.txt -t 15 -of json"
     #my_ffuf.sh -u $1/FUZZ -w /usr/share/seclists/Discovery/Web-Content/common.txt -t 15 -of json
-    echo "dirsearch -u $1"
+    echo "- [ ] dirsearch -u $1"
     #dirsearch -u $1
-    echo "feroxbuster -u $1 -B -n"
+    echo "- [ ] feroxbuster -u $1 -B -n"
+    echo "- [ ] feroxbuster -u $1"
     #feroxbuster -u $1 -B -n
     
-    echo "my_ffuf.sh -u $1/FUZZ -w /usr/share/seclists/Discovery/Web-Content/directory-list-2.3-medium.txt -t 15 -of json"
+    echo "- [ ] my_ffuf.sh -u $1/FUZZ -w /usr/share/seclists/Discovery/Web-Content/directory-list-2.3-medium.txt -t 15 -of json"
     #my_ffuf.sh -u $1/FUZZ -w /usr/share/seclists/Discovery/Web-Content/directory-list-2.3-medium.txt -t 15 -of json
     echo
     echo "#################################"
     echo
     domain=$(echo $1 | sed 's/https\?:\/\///g')
-    echo "ffuf -u $1 -w /usr/share/seclists/Discovery/DNS/subdomains-top1million-20000.txt -H 'Host: FUZZ.$domain' --mc all"
+    echo "- [ ] ffuf -u $1 -w /usr/share/seclists/Discovery/DNS/subdomains-top1million-20000.txt -H 'Host: FUZZ.$domain' --mc all"
     echo
+    echo "- [ ] Revisar hostnames por netexec y por certificados ssl! -> Recuerda que tienes que usar la IP y no ningún otro hostname!!"
     echo "Extensiones recomendadas:"
-    echo ".pdf,.html,.php,.asp,.aspx"
+    echo "- [ ] .pdf,.html,.php,.asp,.aspx"
+    echo
+    echo "#############Wordlists##################"
+    echo "/usr/share/seclists/Discovery/Web-Content/common.txt"
+    echo "/usr/share/seclists/Discovery/Web-Content/directory-list-2.3-medium.txt"
+    echo "/usr/share/wfuzz/wordlist/general/megabeast.txt"
 }
 
+alias ffufed="jq | grep -E '\"url\": |\"status\"|cmdline'"
+alias ffuf_geturls="jq | grep '\"url\":' | sed 's/\"url\"://g' | tr -d '\",' | sed 's/^[ \t]*//'"
+
+function auto_nmap(){
+    echo "echo 'sudo nmap -sS -Pn -sV -p- -T4 -iL ips -oN ext.nmap -vvv --open'"
+    echo "echo 'sudo nmap -sU -sV --top-ports=10 -T4 -iL ips -oN ext_UDP.nmap -vvv --open\ncat ext.nmap ext_UDP.nmap'"
+}
 
 function globalv(){
         cp ~/.zshrc ~/zshrc_bck
@@ -80,7 +94,8 @@ function enum_smb() {
         echo "crackmapexec smb $ipv"
         echo "crackmapexec smb $ipv -u gunther -p password123!"
         echo "crackmapexec smb 10.10.10.1 -u users.txt -p password123"
-        echo
+        echo "crackmapexec smb 10.10.10.1 -u user1 -p password123 --shares"
+	echo
         echo '[*] smbmap:'
         echo 'smbmap -u "" -p "" -P 445 -H $ipv'
         echo 'smbmap -u "guest" -p "" -P 445 -H $ipv'
@@ -88,8 +103,9 @@ function enum_smb() {
         echo
         echo '[*] smbclient:'
         echo 'smbclient -N -L //$ipv'
-        echo 'smbclient -L $ipv -U "$user%$pass"'
+        echo 'smbclient -L //$ipv -U "$user%$pass"'
         echo 'smbclient //$ipv/SYSVOL -U "$user%$pass"'
+        echo 'smbclient //172.16.197.21/scripts -U "domain.com\user%password" --> Get the domain with netexec!!'
         echo '  smb: \> recurse ON'
         echo '  smb: \> prompt OFF'
         echo '  smb: \> mget *'
@@ -132,7 +148,7 @@ function smb_check_writeable() {
 	done
 }
 
-function ftp_enum() {
+function enum_ftp() {
         echo "[*] Checker:"
         echo "nmap -sT -Pn -p21 --script='ftp-anon' $ipv" 
         echo
@@ -216,8 +232,8 @@ function addhttp(){
 function scan_nmap(){
         sudo nmap -sS --min-rate 2000 -p- -Pn -n $1 -oN allPorts_$1 -vv
         ports=$(cat allPorts_$1 | grep -oP "\d{1,5}/tcp" | tr -d "/tcp" | tr "\n" ",")
-        nmap -sCV -p$(echo $ports) -Pn -n  $1 -oN target_$1
-	sudo nmap -sU --top-port=20 $1 --open -oN UDP_target_$1
+        nmap -sCV -p$(echo $ports) -Pn -n  $1 -oN target_$(echo $1).nmap
+	sudo nmap -sU --top-port=20 $1 --open -oN UDP_target_$(echo $1).nmap
 	cat *_$1
 }
 alias gP='grep -oP "\d{1,5}/tcp" | tr -d "/tcp" | tr "\n" "," | xclip -sel c'
@@ -234,6 +250,20 @@ function ffuf_extract(){
 # Loops
 alias template_loop="cat /home/kali/.local/bin/template_loop.sh"
 
+# Netexec auto-testing creds
+function netexec_auto(){
+    # Obtener los servicios y almacenar cada línea como un elemento de un array
+    services=("${(@f)$(netexec | grep own | awk '{print $1}')}")
+
+    # Bucle para recorrer cada servicio en 'services'
+    for service in $services; do
+        echo "netexec $service $1 $2 $3 $4 $5 $6 $7 $8 $9 $10"
+    done
+    echo
+    for service in $services; do
+        echo "netexec $service $1 $2 $3 $4 $5 $6 $7 $8 $9 $10 --local-auth"
+    done
+}
 
 # SMTP
 function smpt_enum(){
@@ -257,3 +287,10 @@ function smpt_enum(){
 }
 
 alias tty="echo 'script /dev/null -c bash \nCtrl + z \nstty raw -echo; fg'"
+
+alias clipfix="ps aux | grep 'clip'  | awk '{print $2}' | xargs | sed 's/^/kill -9 /g' | sed 's/$/; \/usr\/bin\/VBoxClient --clipboard/g' | bash"
+
+alias parshell="/home/kali/.local/bin/parshell.sh"
+
+alias enumdom="sed 's/^/nslookup /g' | sed 's/$/ | Select-String \-Pattern \"Name\:\|Address:\" \-Context 0\,1/g'"
+
