@@ -10,8 +10,9 @@ curl -fsSL https://download.docker.com/linux/debian/gpg | sudo gpg --dearmor -o 
 sudo apt update
 sudo apt install -y docker-ce docker-ce-cli containerd.io
 
-sudo apt install docker-compose
+sudo apt install -y docker-compose
 
+mkdir -p /home/kali/.local/bin
 cp .zshrc_hack ~/.zshrc_hack
 cp .tmux.conf ~/.tmux.conf
 cp .tmux.conf.local ~/.tmux.conf.local
