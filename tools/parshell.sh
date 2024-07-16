@@ -97,6 +97,11 @@ while [[ $# -gt 0 ]]; do
         shift # Pasamos al siguiente argumento
         shift # Pasamos al siguiente argumento
         ;;
+        --orderByPorts)
+        orderByPorts="1"
+        shift # Pasamos al siguiente argumento
+        shift # Pasamos al siguiente argumento
+        ;;
         *)    # Cualquier argumento no reconocido
         echo "Argumento no reconocido: $1"
         exit 1
@@ -110,7 +115,7 @@ if [[ $help_menu -eq 1 ]]; then
     exit 0
 fi
 
-# Si se activó el menú de ayuda, lo mostramos
+# ¿Que hace esto?
 if [[ -n $addDone ]]; then
     echo $addDone >> $doneFile
     cat $doneFile
@@ -251,39 +256,46 @@ fi
 
 
 
+# Función para ordenar los equipos de más puertos a menos puertos abiertos (Mostrar número, y puertos en cada caso)
+if [[ $orderByPorts -eq 1 ]]; then
+    parshell --endpoint > .endpoint
+    cat .endpoint | gripo | sort -u > .ips
 
-#cat 118.180.60.0_23.md | grep -E "Nmap scan|^80/tcp" | grep -E -B1 "80/tcp" | grep -E "Nmap scan" | grep -oP '\d{1,3}\.\d{1,3}\.\d{1,3}\.\d{1,3}' | sed 's/$/:80/g'
-#
-#setopt null_glob
-#
-#port="80"
-#setopt null_glob
-## file="*"
-#service="Microsoft IIS"
+    while IFS= read -r line; do
+        echo $line > /tmp/parshell.tmp
+        cat .endpoint | grep $line | awk '{print "\t" $2}' FS=":" | sed 's/^$//g' >> /tmp/parshell.tmp
+        cat /tmp/parshell.tmp | sed '/^[[:space:]]*$/d' >> ips_and_ports.txt
+        echo
+    done < .ips 
 
-## Filtrar por puertos - Devuelveme los activos con el puerto x abierto
-### en formato 10.10.10.10:80
-#eval "cat $file" | grep -E "Nmap scan|^$port/tcp|^$port/udp" | grep -E -B1 "$port/" | grep -E "Nmap scan" | grep -oP '\d{1,3}\.\d{1,3}\.\d{1,3}\.\d{1,3}' | sed "s/$/:$port/g"
-#
-### Filtrar por puerto con todos los detalles
-#eval "cat $file" | awk -v port="$port" 'BEGIN {flag=0; last_nmap=""} /Nmap scan/ {last_nmap=$0} $1 ~ port "/tcp" {flag=1; if (last_nmap != "") {print last_nmap; last_nmap=""}} flag && /^[0-9]+\/tcp/ && $1 !~ port "/tcp" {flag=0} flag'
-#
-#
-## Filtrar por IP - Muestra el contenido original relativo a una IP
-#ip="118.180.61.84"
-#eval "cat $file" | awk -v ip="$ip" '/^$/ { flag=0 } { if(flag) print } $0 ~ ip { print; flag=1 }'
-#
-#eval "cat $file" | awk -v ip="$ip" '/^$/ { flag=0 } { if(flag) print } $0 ~ ip { print; flag=1 }'
-#
-#
-## Filtrar IP:Puerto
-#ip=
-#eval "cat $file" | awk -v ip="$ip" '/^$/ { flag=0 } { if(flag) print } $0 ~ ip { print; flag=1 }' | awk -v port="$port" 'BEGIN {flag=0} $1 ~ port "/tcp" {flag=1} flag && /^[0-9]+\/tcp/ && $1 !~ port "/tcp" {flag=0} flag'
-#
-#
-## Servicios
-#eval "cat $file" | awk -v pattern="$service" 'BEGIN {last_nmap=""} /Nmap scan/ {last_nmap=$0} $0 ~ pattern {if (last_nmap != "") {print last_nmap; last_nmap=""} print $0}' | grep -P "$service"
-#
-#
-#TODO:
-#Definir distintas funciones que ejecutar según los parámetros utilizados
+    file="ips_and_ports.txt"
+    awk '
+        {
+            if ($1 ~ /^[0-9]+\.[0-9]+\.[0-9]+\.[0-9]+$/) {
+            ip = $1
+            count[ip] = 0
+            ips[ip] = ip
+            } else if ($1 ~ /^[0-9]+$/) {
+            count[ip]++
+            }
+        }
+        END {
+            for (ip in ips) {
+            print count[ip], ips[ip]
+            }
+        }
+        ' "$file" | sort -nr | while read -r count ip; do
+        echo "$ip - $count puertos abiertos"
+        awk -v ip="$ip" '
+            $1 == ip {show = 1; next}
+            show && $1 !~ /^[0-9]+\.[0-9]+\.[0-9]+\.[0-9]+$/ && $1 ~ /^[0-9]+$/ {print "\t" $1}
+            show && $1 ~ /^[0-9]+\.[0-9]+\.[0-9]+\.[0-9]+$/ {show = 0}
+        ' "$file"
+        done
+    rm .endpoint
+    rm /tmp/parshell.tmp
+    rm ips_and_ports.txt
+fi
+
+
+

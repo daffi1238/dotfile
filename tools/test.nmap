@@ -1,0 +1,156 @@
+# Nmap 7.94SVN scan initiated Mon Jul 15 07:27:10 2024 as: nmap -sT -Pn -n -sV -n -T3 -oN out.test -vvv 192.168.1.177 192.168.0.103 192.168.0.125 192.168.1.1 192.168.1.2 192.168.1.178 192.168.1.189 192.168.1.195 192.168.1.211 192.168.1.219 192.168.1.223 192.168.1.252 192.168.1.183 192.168.1.236 45.33.32.156
+Warning: Hit PCRE_ERROR_MATCHLIMIT when probing for service http with the regex '^HTTP/1\.0 404 Not Found\r\n(?:[^<]+|<(?!/head>))*?<style>\nbody \{ background-color: #ffffff; color: #000000; \}\nh1 \{ font-family: sans-serif; font-size: 150%; background-color: #9999cc; font-weight: bold; color: #000000; margin-top: 0;\}\n</style>'
+Nmap scan report for 192.168.1.177
+Host is up, received user-set.
+Scanned at 2024-07-15 07:27:10 EDT for 53s
+All 1000 scanned ports on 192.168.1.177 are in ignored states.
+Not shown: 1000 filtered tcp ports (no-response)
+
+Nmap scan report for 192.168.0.103
+Host is up, received user-set.
+Scanned at 2024-07-15 07:27:10 EDT for 53s
+All 1000 scanned ports on 192.168.0.103 are in ignored states.
+Not shown: 1000 filtered tcp ports (no-response)
+
+Nmap scan report for 192.168.0.125
+Host is up, received user-set.
+Scanned at 2024-07-15 07:27:10 EDT for 54s
+All 1000 scanned ports on 192.168.0.125 are in ignored states.
+Not shown: 1000 filtered tcp ports (no-response)
+
+Nmap scan report for 192.168.1.1
+Host is up, received user-set (0.0046s latency).
+Scanned at 2024-07-15 07:27:10 EDT for 219s
+Not shown: 996 closed tcp ports (conn-refused)
+PORT     STATE SERVICE       REASON  VERSION
+53/tcp   open  domain        syn-ack Cloudflare public DNS
+515/tcp  open  printer       syn-ack
+8443/tcp open  ssl/https-alt syn-ack httpd/2.0
+9100/tcp open  jetdirect?    syn-ack
+1 service unrecognized despite returning data. If you know the service/version, please submit the following fingerprint at https://nmap.org/cgi-bin/submit.cgi?new-service :
+SF-Port8443-TCP:V=7.94SVN%T=SSL%I=7%D=7/15%Time=669507D1%P=x86_64-pc-linux
+SF:-gnu%r(HTTPOptions,15C,"HTTP/1\.0\x20501\x20Not\x20Implemented\r\nServe
+SF:r:\x20httpd/2\.0\r\nx-frame-options:\x20SAMEORIGIN\r\nx-xss-protection:
+SF:\x201;\x20mode=block\r\nDate:\x20Mon,\x2015\x20Jul\x202024\x2011:28:17\
+SF:x20GMT\r\nContent-Type:\x20text/html\r\nConnection:\x20close\r\n\r\n<HT
+SF:ML><HEAD><TITLE>501\x20Not\x20Implemented</TITLE></HEAD>\n<BODY\x20BGCO
+SF:LOR=\"#cc9999\"><H4>501\x20Not\x20Implemented</H4>\nThat\x20method\x20i
+SF:s\x20not\x20implemented\.\n</BODY></HTML>\n")%r(FourOhFourRequest,13A,"
+SF:HTTP/1\.0\x20404\x20Not\x20Found\r\nServer:\x20httpd/2\.0\r\nx-frame-op
+SF:tions:\x20SAMEORIGIN\r\nx-xss-protection:\x201;\x20mode=block\r\nDate:\
+SF:x20Mon,\x2015\x20Jul\x202024\x2011:28:17\x20GMT\r\nContent-Type:\x20tex
+SF:t/html\r\nConnection:\x20close\r\n\r\n<HTML><HEAD><TITLE>404\x20Not\x20
+SF:Found</TITLE></HEAD>\n<BODY\x20BGCOLOR=\"#cc9999\"><H4>404\x20Not\x20Fo
+SF:und</H4>\nFile\x20not\x20found\.\n</BODY></HTML>\n")%r(RTSPRequest,15C,
+SF:"HTTP/1\.0\x20501\x20Not\x20Implemented\r\nServer:\x20httpd/2\.0\r\nx-f
+SF:rame-options:\x20SAMEORIGIN\r\nx-xss-protection:\x201;\x20mode=block\r\
+SF:nDate:\x20Mon,\x2015\x20Jul\x202024\x2011:28:17\x20GMT\r\nContent-Type:
+SF:\x20text/html\r\nConnection:\x20close\r\n\r\n<HTML><HEAD><TITLE>501\x20
+SF:Not\x20Implemented</TITLE></HEAD>\n<BODY\x20BGCOLOR=\"#cc9999\"><H4>501
+SF:\x20Not\x20Implemented</H4>\nThat\x20method\x20is\x20not\x20implemented
+SF:\.\n</BODY></HTML>\n")%r(Help,145,"HTTP/1\.0\x20400\x20Bad\x20Request\r
+SF:\nServer:\x20httpd/2\.0\r\nx-frame-options:\x20SAMEORIGIN\r\nx-xss-prot
+SF:ection:\x201;\x20mode=block\r\nDate:\x20Mon,\x2015\x20Jul\x202024\x2011
+SF::28:32\x20GMT\r\nContent-Type:\x20text/html\r\nConnection:\x20close\r\n
+SF:\r\n<HTML><HEAD><TITLE>400\x20Bad\x20Request</TITLE></HEAD>\n<BODY\x20B
+SF:GCOLOR=\"#cc9999\"><H4>400\x20Bad\x20Request</H4>\nCan't\x20parse\x20re
+SF:quest\.\n</BODY></HTML>\n")%r(LPDString,145,"HTTP/1\.0\x20400\x20Bad\x2
+SF:0Request\r\nServer:\x20httpd/2\.0\r\nx-frame-options:\x20SAMEORIGIN\r\n
+SF:x-xss-protection:\x201;\x20mode=block\r\nDate:\x20Mon,\x2015\x20Jul\x20
+SF:2024\x2011:28:43\x20GMT\r\nContent-Type:\x20text/html\r\nConnection:\x2
+SF:0close\r\n\r\n<HTML><HEAD><TITLE>400\x20Bad\x20Request</TITLE></HEAD>\n
+SF:<BODY\x20BGCOLOR=\"#cc9999\"><H4>400\x20Bad\x20Request</H4>\nCan't\x20p
+SF:arse\x20request\.\n</BODY></HTML>\n");
+
+Nmap scan report for 192.168.1.2
+Host is up, received user-set (0.0045s latency).
+Scanned at 2024-07-15 07:27:10 EDT for 220s
+Not shown: 993 closed tcp ports (conn-refused)
+PORT     STATE SERVICE        REASON  VERSION
+21/tcp   open  ftp            syn-ack MikroTik router ftpd 6.47.9
+22/tcp   open  ssh            syn-ack MikroTik RouterOS sshd (protocol 2.0)
+23/tcp   open  telnet         syn-ack Linux telnetd
+53/tcp   open  domain         syn-ack (generic dns response: NOTIMP)
+80/tcp   open  http           syn-ack MikroTik router config httpd
+2000/tcp open  bandwidth-test syn-ack MikroTik bandwidth-test server
+8291/tcp open  unknown        syn-ack
+1 service unrecognized despite returning data. If you know the service/version, please submit the following fingerprint at https://nmap.org/cgi-bin/submit.cgi?new-service :
+SF-Port53-TCP:V=7.94SVN%I=7%D=7/15%Time=669507D0%P=x86_64-pc-linux-gnu%r(D
+SF:NSVersionBindReqTCP,E,"\0\x0c\0\x06\x81\x84\0\0\0\0\0\0\0\0");
+Service Info: OSs: Linux, RouterOS; Device: router; CPE: cpe:/o:mikrotik:routeros, cpe:/o:linux:linux_kernel
+
+Nmap scan report for 192.168.1.178
+Host is up, received user-set (0.010s latency).
+Scanned at 2024-07-15 07:27:10 EDT for 1s
+All 1000 scanned ports on 192.168.1.178 are in ignored states.
+Not shown: 1000 closed tcp ports (conn-refused)
+
+Nmap scan report for 192.168.1.189
+Host is up, received user-set (0.0053s latency).
+Scanned at 2024-07-15 07:27:10 EDT for 219s
+Not shown: 995 closed tcp ports (conn-refused)
+PORT     STATE SERVICE         REASON  VERSION
+21/tcp   open  ftp             syn-ack vsftpd 3.0.3
+22/tcp   open  ssh             syn-ack OpenSSH 7.6p1 Ubuntu 4ubuntu0.7 (Ubuntu Linux; protocol 2.0)
+902/tcp  open  ssl/vmware-auth syn-ack VMware Authentication Daemon 1.10 (Uses VNC, SOAP)
+5000/tcp open  http            syn-ack Node.js (Express middleware)
+7070/tcp open  ssl/realserver? syn-ack
+Service Info: OSs: Unix, Linux; CPE: cpe:/o:linux:linux_kernel
+
+Nmap scan report for 192.168.1.195
+Host is up, received user-set.
+Scanned at 2024-07-15 07:27:10 EDT for 53s
+All 1000 scanned ports on 192.168.1.195 are in ignored states.
+Not shown: 1000 filtered tcp ports (no-response)
+
+Nmap scan report for 192.168.1.211
+Host is up, received user-set (0.012s latency).
+Scanned at 2024-07-15 07:27:10 EDT for 219s
+Not shown: 999 closed tcp ports (conn-refused)
+PORT   STATE SERVICE REASON  VERSION
+80/tcp open  http    syn-ack TP-LINK embedded httpd
+
+Nmap scan report for 192.168.1.219
+Host is up, received user-set.
+Scanned at 2024-07-15 07:27:10 EDT for 54s
+All 1000 scanned ports on 192.168.1.219 are in ignored states.
+Not shown: 1000 filtered tcp ports (no-response)
+
+Nmap scan report for 192.168.1.223
+Host is up, received user-set (0.00094s latency).
+Scanned at 2024-07-15 07:27:10 EDT for 219s
+Not shown: 999 filtered tcp ports (no-response)
+PORT     STATE SERVICE       REASON  VERSION
+3389/tcp open  ms-wbt-server syn-ack Microsoft Terminal Services
+Service Info: OS: Windows; CPE: cpe:/o:microsoft:windows
+
+Nmap scan report for 192.168.1.252
+Host is up, received user-set (0.0075s latency).
+Scanned at 2024-07-15 07:27:10 EDT for 219s
+Not shown: 998 closed tcp ports (conn-refused)
+PORT   STATE SERVICE REASON  VERSION
+23/tcp open  telnet  syn-ack security DVR telnetd (many brands)
+80/tcp open  http    syn-ack BusyBox httpd 1.13
+Service Info: OS: Linux; CPE: cpe:/o:linux:linux_kernel
+
+Nmap scan report for 192.168.1.183
+Host is up, received user-set.
+Scanned at 2024-07-15 07:27:10 EDT for 54s
+All 1000 scanned ports on 192.168.1.183 are in ignored states.
+Not shown: 1000 filtered tcp ports (no-response)
+
+Nmap scan report for 192.168.1.236
+Host is up, received user-set.
+Scanned at 2024-07-15 07:27:10 EDT for 54s
+All 1000 scanned ports on 192.168.1.236 are in ignored states.
+Not shown: 1000 filtered tcp ports (no-response)
+
+Nmap scan report for 45.33.32.156
+Host is up, received user-set.
+Scanned at 2024-07-15 07:27:10 EDT for 50s
+All 1000 scanned ports on 45.33.32.156 are in ignored states.
+Not shown: 1000 filtered tcp ports (no-response)
+
+Read data files from: /usr/bin/../share/nmap
+Service detection performed. Please report any incorrect results at https://nmap.org/submit/ .
+# Nmap done at Mon Jul 15 07:30:50 2024 -- 15 IP addresses (15 hosts up) scanned in 219.88 seconds
