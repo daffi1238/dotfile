@@ -12,6 +12,7 @@ sudo apt install -y docker-ce docker-ce-cli containerd.io
 
 sudo apt install docker-compose
 
+mkdir /home/kali/.local/bin
 cp .zshrc_hack ~/.zshrc_hack
 cp .tmux.conf ~/.tmux.conf
 cp .tmux.conf.local ~/.tmux.conf.local
