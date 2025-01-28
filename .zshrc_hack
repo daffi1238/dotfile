@@ -45,7 +45,12 @@ function auto_fuzz(){
 }
 
 alias ffufed="jq | grep -E '\"url\": |\"status\"|cmdline'"
-alias ffuf_geturls="jq | grep '\"url\":' | sed 's/\"url\"://g' | tr -d '\",' | sed 's/^[ \t]*//'"
+alias ffuf_as="jq | grep -E 'status' | awk '{print $2}' | tr -d ",{" | sort -nu"
+
+#ffuf get urls by status
+function ffuf_gus(){
+	cat $1 | jq | grep -E "status|url\":" | grep -A1 "status\": $2" | grep "url" | awk '{print $2":"$3}' FS=":" | tr -d '",'
+}
 
 function auto_nmap(){
     echo "echo 'sudo nmap -sS -Pn -sV -p- -T4 -iL ips -oN ext.nmap -vvv --open'"
