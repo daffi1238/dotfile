@@ -46,11 +46,20 @@ function auto_fuzz(){
 
 alias ffufed="jq | grep -E '\"url\": |\"status\"|cmdline'"
 
-#ffuf get urls by status
-function ffuf_gus(){
-	cat $1 | jq | grep -E 'status' | awk '{print $2}' | tr -d ",{" | sort | uniq -c
-	cat $1 | jq | grep -E "status|url\":" | grep -A1 "status\": $2" | grep "url" | awk '{print $2":"$3}' FS=":" | tr -d '",'
+function ffuf_gus() {
+        statuses=$(cat *.json | jq | grep -E 'status' | awk '{print $2}' | tr -d ",{" | sort | uniq | sed '/^[[:space:]]*$/d')
+        echo $statuses
+        echo
+        echo
+        echo "$statuses" | while read -r status_code; do
+                echo
+                echo
+                echo -e "\e[32mCódigo de estado: $status_code\e[0m"
+                cat *.json | jq | grep -E "status|url\":" | grep -A1 "status\": $status_code" | grep "url" | awk '{print $2":"$3}' FS=":" | tr -d '",'
+
+        done
 }
+
 
 function auto_nmap(){
     echo "echo 'sudo nmap -sS -Pn -sV -p- -T4 -iL ips -oN ext.nmap -vvv --open'"
