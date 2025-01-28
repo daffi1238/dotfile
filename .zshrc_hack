@@ -45,10 +45,10 @@ function auto_fuzz(){
 }
 
 alias ffufed="jq | grep -E '\"url\": |\"status\"|cmdline'"
-alias ffuf_as="jq | grep -E 'status' | awk '{print $2}' | tr -d ",{" | sort -nu"
 
 #ffuf get urls by status
 function ffuf_gus(){
+	cat $1 | jq | grep -E 'status' | awk '{print $2}' | tr -d ",{" | sort | uniq -c
 	cat $1 | jq | grep -E "status|url\":" | grep -A1 "status\": $2" | grep "url" | awk '{print $2":"$3}' FS=":" | tr -d '",'
 }
 
