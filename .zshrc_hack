@@ -47,7 +47,7 @@ function auto_fuzz(){
 alias ffufed="jq | grep -E '\"url\": |\"status\"|cmdline'"
 
 function ffuf_gus() {
-        statuses=$(cat *.json | jq | grep -E 'status' | awk '{print $2}' | tr -d ",{" | sort | uniq | sed '/^[[:space:]]*$/d')
+        statuses=$(cat *.json | jq | grep -E '"status"' | awk '{print $2}' | tr -d ",{" | sort | uniq | sed '/^[[:space:]]*$/d')
         echo $statuses
         echo
         echo
