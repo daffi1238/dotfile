@@ -11,7 +11,7 @@ if len(sys.argv) != 2:
 url = sys.argv[1]
 
 # Obtener el favicon desde la URL proporcionada
-response = requests.get(f'{url}/favicon.ico')
+response = requests.get(f'{url}')
 favicon = codecs.encode(response.content, "base64")
 
 # Calcular el hash mmh3
