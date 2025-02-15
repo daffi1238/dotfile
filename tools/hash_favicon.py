@@ -1,19 +1,23 @@
+#!/usr/bin/python3
 import mmh3
 import requests
 import codecs
 import sys
 
-# Verificar si se pasó la URL como argumento
+# Verificar que se haya pasado la URL como argumento
 if len(sys.argv) != 2:
-    print("Uso: python3 hash_favicon.py <URL_ico_file>")
+    print(f"Uso: {sys.argv[0]} <URL>")
     sys.exit(1)
 
 url = sys.argv[1]
 
-# Obtener el favicon desde la URL proporcionada
-response = requests.get(f'{url}')
-favicon = codecs.encode(response.content, "base64")
-
-# Calcular el hash mmh3
-hash = mmh3.hash(favicon)
-print(f"Hash mmh3 del favicon de {url}: {hash}")
+try:
+    response = requests.get(url)
+    response.raise_for_status()  # Lanza un error si la respuesta no es exitosa
+    favicon = codecs.encode(response.content, "base64")
+    hash = mmh3.hash(favicon)
+    print(f"{url}: {hash}")
+except requests.RequestException as e:
+    print(f"Error al obtener la URL: {e}")
+except Exception as e:
+    print(f"Error inesperado: {e}")
