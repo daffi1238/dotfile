@@ -18,7 +18,7 @@ alias gripo="grep -oP '\d{1,3}\.\d{1,3}\.\d{1,3}\.\d{1,3}'"
 alias fuzz="cat ~/.fuzz"
 
 function auto_fuzz(){
-    echo "- [ ] my_ffuf.sh -u $1/FUZZ -w /usr/share/seclists/Discovery/Web-Content/common.txt -t 15 -of json"
+    echo "- [ ] my_ffuf.sh -u $1/FUZZ -w /usr/share/seclists/Discovery/Web-Content/common.txt -t 3"
     #my_ffuf.sh -u $1/FUZZ -w /usr/share/seclists/Discovery/Web-Content/common.txt -t 15 -of json
     echo "- [ ] dirsearch -u $1"
     #dirsearch -u $1
@@ -26,8 +26,8 @@ function auto_fuzz(){
     echo "- [ ] feroxbuster -u $1"
     #feroxbuster -u $1 -B -n
     
-    echo "- [ ] my_ffuf.sh -u $1/FUZZ -w /usr/share/seclists/Discovery/Web-Content/directory-list-2.3-medium.txt -t 15 -of json"
-    #my_ffuf.sh -u $1/FUZZ -w /usr/share/seclists/Discovery/Web-Content/directory-list-2.3-medium.txt -t 15 -of json
+    echo "- [ ] my_ffuf.sh -u $1/FUZZ -w /usr/share/seclists/Discovery/Web-Content/directory-list-2.3-medium.txt -t 3"
+    #my_ffuf.sh -u $1/FUZZ -w /usr/share/seclists/Discovery/Web-Content/directory-list-2.3-medium.txt -t 3
     echo
     echo "#################################"
     echo
