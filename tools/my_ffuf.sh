@@ -18,9 +18,6 @@ while [[ "$#" -gt 0 ]]; do
         -w) wordlist="$2"; shift 2 ;;
         -t) threads="$2"; shift 2 ;;
         -x) proxy="$2"; shift 2 ;;
-        -of) output_format="$2"; shift 2 ;;
-        -o) output_file="$2"; shift 2 ;;
-        -fw) filter_wordcount="$2"; shift 2 ;;
         *) echo "Argumento desconocido: $1"; exit 1 ;;
     esac
 done
@@ -44,7 +41,7 @@ output_name="${url_out}_${wordlist_out}"
 
 
 # Llamar a ffuf con las opciones proporcionadas
-out=$(echo "ffuf -u \"$url\" -w \"$wordlist\" -t \"$threads\" -x \"$proxy\" -of \"$output_format\" -o \"$output_file\" -fw \"$filter_wordcount\" -of json -o \"$output_name\".json")
+out=$(echo "ffuf -u \"$url\" -w \"$wordlist\" -t \"$threads\" -x \"$proxy\" -fw \"$filter_wordcount\" -of json -o \"$output_name\".json | tee $output_name.ffuf")
 echo $out > .my_fuzz.out
 cat .my_fuzz.out
 cat .my_fuzz.out | xclip -sel c
